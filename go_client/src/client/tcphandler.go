@@ -8,6 +8,7 @@ import (
 	"client_crypt"
 	"encoding/binary"
 	"bytes"
+	"fmt"
 )
 
 func Tcpclient(port int, host string, rport int) error {
@@ -130,8 +131,9 @@ func handle_tcp4_connecton(con *net.TCPConn, host string, rport int) {
 					recv, err := client_crypt.Decrypt(recv[:i][12:], recv[:i][:12])
 
 					if err != nil {
-						break_chan <- true
-						return
+						fmt.Println(err)
+						//break_chan <- true
+						//return
 					}
 					rchan <- recv
 					break
@@ -140,8 +142,8 @@ func handle_tcp4_connecton(con *net.TCPConn, host string, rport int) {
 					recv_length += i
 					continue
 				} else {
-					break_chan <- true
-					return
+					//break_chan <- true
+					//return
 				}
 			}
 
@@ -155,16 +157,17 @@ func handle_tcp4_connecton(con *net.TCPConn, host string, rport int) {
 			send := make([]byte, 20480)
 			i, err := local.Read(send)
 			if err != nil {
-				break_chan <- true
-				return
+				fmt.Println(err)
+				//break_chan <- true
+				//return
 			}
 			if i > 0 {
 
 				schan <- send[:i]
 
 			} else {
-				break_chan <- true
-				return
+				//break_chan <- true
+				//return
 			}
 
 		}
@@ -175,6 +178,7 @@ func handle_tcp4_connecton(con *net.TCPConn, host string, rport int) {
 		case recv_data := <-recv_chan:
 
 			if _, err := con.Write(recv_data); err != nil {
+				fmt.Println(err)
 				return
 
 			}

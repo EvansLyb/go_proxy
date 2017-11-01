@@ -8,7 +8,7 @@ import (
 	"bytes"
 	"io"
 	"errors"
-	"fmt"
+
 )
 
 var (
@@ -33,7 +33,7 @@ func Decrypt(data, nonce []byte) (decdata []byte, err error) {
 func Write_enc_data(con io.Writer, data []byte) error {
 	dst, nonce := Encrypt(data)
 	_, err := con.Write(bytes.Join([][]byte{nonce, dst}, nil))
-	fmt.Println(len(dst)+len(nonce))
+
 	return err
 }
 

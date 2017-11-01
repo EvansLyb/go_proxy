@@ -81,7 +81,7 @@ func handle_ipv4_udp_data(udp_addr *net.UDPAddr, data []byte, server *net.UDPCon
 
 	if i > 0 {
 		dst,nonce:= server_crypt.Encrypt(recv[:i])
-		fmt.Println(len(dst)+len(nonce))
+
 
 		if _, werr := server.WriteToUDP(bytes.Join([][]byte{nonce,dst},nil), udp_addr); werr != nil {
 			return

@@ -10,6 +10,7 @@ import (
 	"bytes"
 	"server_crypt"
 
+	"fmt"
 )
 
 func Tcpserver(port int) {
@@ -91,15 +92,16 @@ func handle_tcp4_connecton(con *net.TCPConn) {
 			recv := make([]byte, 20480)
 			i, err := target.Read(recv)
 			if err != nil {
-				break_chan <- true
-				return
+				fmt.Println(err)
+				//break_chan <- true
+				//return
 			}
 			if i > 0 {
 				rchan <- recv[:i]
 
 			} else {
-				break_chan <- true
-				return
+				//break_chan <- true
+				//return
 			}
 
 		}
@@ -125,8 +127,8 @@ func handle_tcp4_connecton(con *net.TCPConn) {
 				enc_data := make([]byte, length-recv_length)
 				i, rerr := con.Read(enc_data)
 				if rerr != nil {
-					break_chan <- true
-					return
+					//break_chan <- true
+					//return
 				}
 				recv := bytes.Join([][]byte{temp_buff, enc_data[:i]}, nil)
 
@@ -134,8 +136,9 @@ func handle_tcp4_connecton(con *net.TCPConn) {
 					recv, err := server_crypt.Decrypt(recv[:i][12:], recv[:i][:12])
 
 					if err != nil {
-						break_chan <- true
-						return
+						fmt.Println(err)
+						//break_chan <- true
+						//return
 					}
 					schan <- recv
 					break
@@ -144,8 +147,8 @@ func handle_tcp4_connecton(con *net.TCPConn) {
 					recv_length += i
 					continue
 				} else {
-					break_chan <- true
-					return
+					//break_chan <- true
+					//return
 				}
 			}
 		}

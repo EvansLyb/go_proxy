@@ -27,6 +27,7 @@ func Encrypt(data []byte) (dst []byte, nonce []byte) {
 func Decrypt(data, nonce []byte) (decdata []byte, err error) {
 
 	decdata, err = Aead.Open(nil, nonce, data, []byte("fuckgfw"))
+	fmt.Println(err)
 	return
 }
 
@@ -43,7 +44,7 @@ func Read_enc_data(con io.Reader, buff int) (i int, data []byte, err error) {
 
 		return i, nil, err
 	}
-	fmt.Println(i)
+
 	if i <= 28 {
 		return -1, nil, errors.New("null data")
 	}
