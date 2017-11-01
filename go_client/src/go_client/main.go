@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
-	"crypt"
+	"client_crypt"
 	"bytes"
 	"golang.org/x/crypto/chacha20poly1305"
 	"log"
@@ -52,7 +52,7 @@ func init() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		crypt.Aead = cipaead
+		client_crypt.Aead = cipaead
 
 	} else {
 		fmt.Println("use --help to useage")

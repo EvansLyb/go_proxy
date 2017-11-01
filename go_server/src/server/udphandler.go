@@ -7,7 +7,8 @@ import (
 	"strings"
 	"fmt"
 	"bytes"
-	"crypt"
+	"server_crypt"
+
 )
 
 func Udp_server(port int) {
@@ -43,7 +44,7 @@ func Udp_server(port int) {
 
 func handle_ipv4_udp_data(udp_addr *net.UDPAddr, data []byte, server *net.UDPConn) {
 
-	data, err := crypt.Decrypt(data[12:], data[:12])
+	data, err := server_crypt.Decrypt(data[12:], data[:12])
 
 	if err != nil {
 		fmt.Println("can not dec data from " + udp_addr.String() + " : " + err.Error())
@@ -79,7 +80,7 @@ func handle_ipv4_udp_data(udp_addr *net.UDPAddr, data []byte, server *net.UDPCon
 	}
 
 	if i > 0 {
-		dst,nonce:=crypt.Encrypt(recv[:i])
+		dst,nonce:= server_crypt.Encrypt(recv[:i])
 		fmt.Println(len(dst)+len(nonce))
 
 		if _, werr := server.WriteToUDP(bytes.Join([][]byte{nonce,dst},nil), udp_addr); werr != nil {

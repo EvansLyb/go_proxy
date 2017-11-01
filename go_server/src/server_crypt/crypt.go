@@ -1,4 +1,4 @@
-package crypt
+package server_crypt
 
 import (
 	"crypto/cipher"
@@ -33,17 +33,19 @@ func Decrypt(data, nonce []byte) (decdata []byte, err error) {
 func Write_enc_data(con io.Writer, data []byte) error {
 	dst, nonce := Encrypt(data)
 	_, err := con.Write(bytes.Join([][]byte{nonce, dst}, nil))
+	fmt.Println(len(dst)+len(nonce))
 	return err
 }
 
 func Read_enc_data(con io.Reader, buff int) (i int, data []byte, err error) {
 	recv := make([]byte, buff)
+
 	i, err = con.Read(recv)
 	if err != nil {
 
 		return i, nil, err
 	}
-	fmt.Println(i)
+
 	if i <= 28 {
 		return -1, nil, errors.New("null data")
 	}

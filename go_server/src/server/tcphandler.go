@@ -8,7 +8,8 @@ import (
 	"encoding/binary"
 	"strconv"
 	"bytes"
-	"crypt"
+	"server_crypt"
+
 )
 
 func Tcpserver(port int) {
@@ -51,7 +52,7 @@ func handle_tcp4_connecton(con *net.TCPConn) {
 
 	//read dest=========================================================================
 
-	_, dest, err := crypt.Read_enc_data(con, 34)
+	_, dest, err := server_crypt.Read_enc_data(con, 34)
 
 	if err != nil {
 		Logger.Println("can not read the dest addr : " + err.Error())
@@ -130,7 +131,7 @@ func handle_tcp4_connecton(con *net.TCPConn) {
 				recv := bytes.Join([][]byte{temp_buff, enc_data[:i]}, nil)
 
 				if len(recv) == length {
-					recv, err := crypt.Decrypt(recv[:i][12:], recv[:i][:12])
+					recv, err := server_crypt.Decrypt(recv[:i][12:], recv[:i][:12])
 
 					if err != nil {
 						break_chan <- true
@@ -154,7 +155,7 @@ func handle_tcp4_connecton(con *net.TCPConn) {
 		select {
 
 		case recv_data := <-recv_chan:
-			dst, nonce := crypt.Encrypt(recv_data)
+			dst, nonce := server_crypt.Encrypt(recv_data)
 			data_len := make([]byte, 2)
 			binary.BigEndian.PutUint16(data_len, uint16(len(dst)+len(nonce)))
 			if _,err:=con.Write(bytes.Join([][]byte{data_len, nonce, dst}, nil));err!=nil{

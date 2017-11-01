@@ -9,7 +9,7 @@ import (
 	"golang.org/x/net/ipv4"
 	"encoding/binary"
 
-	"crypt"
+	"client_crypt"
 )
 
 func Udpclient(port int, host string, rport int) {
@@ -74,7 +74,7 @@ func handle_ipv4_udp_data(local *net.UDPConn, udp_addr *net.UDPAddr, data, oob [
 	//if _, werr := remote.Write(bytes.Join([][]byte{dest_byte, data}, nil)); werr != nil {
 	//	return
 	//}
-	werr := crypt.Write_enc_data(remote, bytes.Join([][]byte{dest_byte, data}, nil))
+	werr := client_crypt.Write_enc_data(remote, bytes.Join([][]byte{dest_byte, data}, nil))
 	if werr != nil {
 		return
 	}
@@ -87,7 +87,7 @@ func handle_ipv4_udp_data(local *net.UDPConn, udp_addr *net.UDPAddr, data, oob [
 	//	return
 	//}
 
-	_, recv, rerr := crypt.Read_enc_data(remote, 1464)
+	_, recv, rerr := client_crypt.Read_enc_data(remote, 1464)
 
 	if rerr != nil {
 		return

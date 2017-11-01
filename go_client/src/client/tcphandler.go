@@ -5,7 +5,7 @@ import (
 	"log"
 	"syscall"
 	"strings"
-	"crypt"
+	"client_crypt"
 	"encoding/binary"
 	"bytes"
 )
@@ -84,7 +84,7 @@ func handle_tcp4_connecton(con *net.TCPConn, host string, rport int) {
 	//first write the 6 bytes to proxy server=====================================================================================
 
 	//chacha20 encdata len 34 bytes
-	if werr := crypt.Write_enc_data(remote, dest); werr != nil {
+	if werr := client_crypt.Write_enc_data(remote, dest); werr != nil {
 		Logger.Println("tcp : fail to write dest addr to proxy server from " + con.RemoteAddr().String() + ":" + err.Error())
 		return
 	}
@@ -127,7 +127,7 @@ func handle_tcp4_connecton(con *net.TCPConn, host string, rport int) {
 				recv := bytes.Join([][]byte{temp_buff, enc_data[:i]}, nil)
 
 				if len(recv) == length {
-					recv, err := crypt.Decrypt(recv[:i][12:], recv[:i][:12])
+					recv, err := client_crypt.Decrypt(recv[:i][12:], recv[:i][:12])
 
 					if err != nil {
 						break_chan <- true
@@ -181,7 +181,7 @@ func handle_tcp4_connecton(con *net.TCPConn, host string, rport int) {
 		case send_data := <-send_chan:
 
 			data_len := make([]byte, 2)
-			dst, nonce := crypt.Encrypt(send_data)
+			dst, nonce := client_crypt.Encrypt(send_data)
 			binary.BigEndian.PutUint16(data_len, uint16(len(dst)+len(nonce)))
 			if _, err := remote.Write(bytes.Join([][]byte{data_len, nonce, dst}, nil)); err != nil {
 				return

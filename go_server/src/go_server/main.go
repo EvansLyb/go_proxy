@@ -16,8 +16,9 @@ import (
 	"golang.org/x/crypto/chacha20poly1305"
 	"log"
 	"os"
-	"crypt"
+
 	"server"
+	"server_crypt"
 )
 
 var (
@@ -50,7 +51,8 @@ func init() {
 
 			log.Fatal(err)
 		}
-		crypt.Aead = cipaead
+
+		server_crypt.Aead = cipaead
 
 	} else {
 		fmt.Println("use --help to useage")
